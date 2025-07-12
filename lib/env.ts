@@ -13,6 +13,7 @@ export const env = createEnv({
       .string()
       .min(1, "AUTH_GITHUB_CLIENT_SECRET is required"),
     RESEND_API_KEY: z.string().min(1, "RESEND_API_KEY is required"),
+    ARCJET_KEY: z.string().min(1, "ARCJET_KEY is required"),
   },
 
   runtimeEnv: process.env,
