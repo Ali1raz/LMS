@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ArrowLeftIcon, Plus, PlusCircle, Sparkles } from "lucide-react";
+import { ArrowLeftIcon, Plus, Sparkles } from "lucide-react";
 import Link from "next/link";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,7 +24,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -40,6 +39,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { SelectTrigger } from "@radix-ui/react-select";
+import { RichTextEditor } from "@/components/rich-text-editor/editor";
 
 export default function CreateCourse() {
   // 1. Define your form.
@@ -133,11 +133,7 @@ export default function CreateCourse() {
                   <FormItem className="w-full">
                     <FormLabel>Small Description</FormLabel>
                     <FormControl>
-                      <Textarea
-                        className="min-h-20"
-                        placeholder="small description"
-                        {...field}
-                      />
+                      <RichTextEditor field={field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

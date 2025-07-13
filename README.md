@@ -1,6 +1,7 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 [https://ui.shadcn.com/docs/components/form](https://ui.shadcn.com/docs/components/form)
+[https://tiptap.dev/docs/editor/getting-started/install/nextjs#page-title](https://tiptap.dev/docs/editor/getting-started/install/nextjs#page-title)
 
 ## Getting Started
 
