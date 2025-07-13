@@ -18,9 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
-import { toast } from "sonner";
-import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+import { useSignOut } from "@/hooks/use-signout";
 
 interface UserAvatarProps {
   name: string;
@@ -29,29 +27,23 @@ interface UserAvatarProps {
 }
 
 export default function UserAvatar({ name, email, image }: UserAvatarProps) {
-  const router = useRouter();
-
-  async function signOut() {
-    await authClient.signOut({
-      fetchOptions: {
-        onSuccess: () => {
-          router.push("/");
-          toast.success("Successfully signed out!");
-        },
-        onError: () => {
-          toast.error("Failed to sign out");
-        },
-      },
-    });
-  }
+  const handleSignOut = useSignOut();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="h-auto p-0 hover:bg-transparent">
           <Avatar>
-            <AvatarImage src={image} alt="Profile image" />
-            <AvatarFallback>{name[0].toUpperCase()}</AvatarFallback>
+            <AvatarImage
+              src={
+                image ??
+                `https://avatar.vercel.sh/${name[0] && email.split("@")[0]}`
+              }
+              alt="Profile image"
+            />
+            <AvatarFallback>
+              {name[0] && email.split("@")[0].charAt(0)}
+            </AvatarFallback>
           </Avatar>
           <ChevronDownIcon
             size={16}
@@ -63,7 +55,7 @@ export default function UserAvatar({ name, email, image }: UserAvatarProps) {
       <DropdownMenuContent align="end" className="max-w-64">
         <DropdownMenuLabel className="flex min-w-0 flex-col">
           <span className="text-foreground truncate text-sm font-medium">
-            {name}
+            {name && email.split("@")[0]}
           </span>
           <span className="text-muted-foreground truncate text-xs font-normal">
             {email}
@@ -97,7 +89,7 @@ export default function UserAvatar({ name, email, image }: UserAvatarProps) {
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem onClick={signOut} className="cursor-pointer">
+        <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer">
           <LogOutIcon size={16} className="opacity-60" aria-hidden="true" />
           <span>Logout</span>
         </DropdownMenuItem>
