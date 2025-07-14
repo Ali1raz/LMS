@@ -39,9 +39,18 @@ export default function Navbar() {
         {isPending ? null : session ? (
           <>
             <UserAvatar
-              name={session?.user.name}
+              name={
+                session?.user.name && session?.user.name.length > 0
+                  ? session?.user.name[0]
+                  : session?.user?.email.split("@")[0]
+              }
               email={session?.user.email}
-              image={session?.user.image || ""}
+              image={
+                session?.user.image ??
+                `https://avatar.vercel.sh/${
+                  session?.user.name[0] && session?.user.email.split("@")[0]
+                }`
+              }
             />
           </>
         ) : (

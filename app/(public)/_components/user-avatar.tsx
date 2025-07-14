@@ -34,15 +34,9 @@ export default function UserAvatar({ name, email, image }: UserAvatarProps) {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="h-auto p-0 hover:bg-transparent">
           <Avatar>
-            <AvatarImage
-              src={
-                image ??
-                `https://avatar.vercel.sh/${name[0] && email.split("@")[0]}`
-              }
-              alt="Profile image"
-            />
+            <AvatarImage src={image} alt="Profile image" />
             <AvatarFallback>
-              {name[0] && email.split("@")[0].charAt(0)}
+              {name && name.length > 0 ? name : email.split("@")[0]}
             </AvatarFallback>
           </Avatar>
           <ChevronDownIcon
@@ -55,7 +49,7 @@ export default function UserAvatar({ name, email, image }: UserAvatarProps) {
       <DropdownMenuContent align="end" className="max-w-64">
         <DropdownMenuLabel className="flex min-w-0 flex-col">
           <span className="text-foreground truncate text-sm font-medium">
-            {name && email.split("@")[0]}
+            {name && name.length > 0 ? name : email.split("@")[0]}
           </span>
           <span className="text-muted-foreground truncate text-xs font-normal">
             {email}
