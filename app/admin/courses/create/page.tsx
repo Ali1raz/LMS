@@ -40,6 +40,7 @@ import {
 } from "@/components/ui/select";
 import { SelectTrigger } from "@radix-ui/react-select";
 import { RichTextEditor } from "@/components/rich-text-editor/editor";
+import Uploader from "@/components/file-uploader/uploader";
 
 export default function CreateCourse() {
   // 1. Define your form.
@@ -133,7 +134,11 @@ export default function CreateCourse() {
                   <FormItem className="w-full">
                     <FormLabel>Small Description</FormLabel>
                     <FormControl>
-                      <RichTextEditor field={field} />
+                      <Textarea
+                        className="min-h-28"
+                        placeholder="Small description"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -147,11 +152,7 @@ export default function CreateCourse() {
                   <FormItem className="w-full">
                     <FormLabel>Description</FormLabel>
                     <FormControl>
-                      <Textarea
-                        className="min-h-28"
-                        placeholder="Description"
-                        {...field}
-                      />
+                      <RichTextEditor field={field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -165,7 +166,7 @@ export default function CreateCourse() {
                   <FormItem className="w-full">
                     <FormLabel>Thumbnail</FormLabel>
                     <FormControl>
-                      <Input placeholder="Upload Thumbnail" {...field} />
+                      <Uploader />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
