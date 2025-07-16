@@ -1,7 +1,12 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 [https://ui.shadcn.com/docs/components/form](https://ui.shadcn.com/docs/components/form)
+
+[https://resend.com/docs/send-with-nextjs](https://resend.com/docs/send-with-nextjs)
+
 [https://tiptap.dev/docs/editor/getting-started/install/nextjs#page-title](https://tiptap.dev/docs/editor/getting-started/install/nextjs#page-title)
+
+[https://www.tigrisdata.com/docs/sdks/s3/aws-js-sdk/](https://www.tigrisdata.com/docs/sdks/s3/aws-js-sdk/)
 
 ## Getting Started
 
