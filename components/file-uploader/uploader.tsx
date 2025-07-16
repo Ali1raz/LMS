@@ -1,13 +1,17 @@
 "use client";
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
 import { Card, CardContent } from "../ui/card";
 import { cn } from "@/lib/utils";
-import { ShowEmptyState, ShowErrorState } from "./show-state";
+import {
+  ShowEmptyState,
+  ShowErrorState,
+  ShowUploadedState,
+  ShowUploadingStatus,
+} from "./show-state";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
-import { file } from "zod";
 
 type FileState = {
   id: string | null;
@@ -32,27 +36,35 @@ export default function Uploader() {
     fileType: "image",
   });
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    if (acceptedFiles.length > 0) {
-      const file = acceptedFiles[0];
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      if (acceptedFiles.length > 0) {
+        const file = acceptedFiles[0];
 
-      setFileState({
-        id: uuidv4(),
-        file: file,
-        isUploading: false,
-        isDeleting: false,
-        progress: 0,
-        error: false,
-        objectUrl: URL.createObjectURL(file),
-        fileType: "image",
-      });
+        if (fileState.objectUrl || !fileState.objectUrl?.startsWith("http")) {
+          // cleanup memory
+          URL.revokeObjectURL(fileState.objectUrl!);
+        }
 
-      uploadFile(file);
-    }
-  }, []);
+        setFileState({
+          id: uuidv4(),
+          file: file,
+          isUploading: false,
+          isDeleting: false,
+          progress: 0,
+          error: false,
+          objectUrl: URL.createObjectURL(file),
+          fileType: "image",
+        });
+
+        uploadFile(file);
+      }
+    },
+    [fileState.objectUrl]
+  );
 
   async function uploadFile(file: File) {
-    console.log("uploaded file:", file);
+    // console.log("uploaded file:", file);
     setFileState((prev) => ({
       ...prev,
       isUploading: true,
@@ -97,8 +109,8 @@ export default function Uploader() {
         };
 
         xhr.onload = () => {
-          console.log("Upload complete:", xhr.status);
-          console.log("Response text:", xhr.responseText);
+          // console.log("Upload complete:", xhr.status);
+          // console.log("Response text:", xhr.responseText);
           if (xhr.status === 200 || xhr.status === 204) {
             setFileState((prev) => ({
               ...prev,
@@ -115,7 +127,7 @@ export default function Uploader() {
         };
 
         xhr.onerror = () => {
-          console.log(xhr.responseText, xhr.status);
+          // console.log(xhr.responseText, xhr.status);
           toast.error("Upload failed");
           reject(new Error("Upload failed"));
         };
@@ -166,17 +178,31 @@ export default function Uploader() {
 
   function renderContent() {
     if (fileState.isUploading) {
-      return <h1>uploading...</h1>;
+      return (
+        <ShowUploadingStatus
+          file={fileState.file as File}
+          progress={fileState.progress}
+        />
+      );
     }
     if (fileState.error) {
       return <ShowErrorState />;
     }
 
     if (fileState.objectUrl) {
-      return <h1>File uploaded...</h1>;
+      return <ShowUploadedState objectUrl={fileState.objectUrl} />;
     }
     return <ShowEmptyState isDragActive={isDragActive} />;
   }
+
+  useEffect(() => {
+    return () => {
+      if (fileState.objectUrl || !fileState.objectUrl?.startsWith("http")) {
+        // cleanup memory
+        URL.revokeObjectURL(fileState.objectUrl!);
+      }
+    };
+  }, [fileState.objectUrl]);
 
   return (
     <Card
@@ -190,17 +216,8 @@ export default function Uploader() {
     >
       <CardContent className="flex items-center justify-center p-2 h-full w-full">
         <input {...getInputProps()} />
-        {/* <ShowEmptyState isDragActive={isDragActive} /> */}
-        {/* <ShowErrorState /> */}
         {renderContent()}
-
-        {fileState.objectUrl && (
-          <img
-            src={fileState.objectUrl}
-            alt="Preview"
-            className="w-24 h-24 object-cover rounded"
-          />
-        )}
+        {/* <ShowUploadingStatus file={fileState.file as File} progress={30} /> */}
       </CardContent>
     </Card>
   );

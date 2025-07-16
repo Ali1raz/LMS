@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
-import { CloudUpload, ImageIcon } from "lucide-react";
+import { CloudUpload, ImageIcon, XIcon } from "lucide-react";
 import { Button } from "../ui/button";
+import Image from "next/image";
 
 interface IShowState {
   isDragActive: boolean;
@@ -43,6 +44,40 @@ export function ShowErrorState() {
       <Button type="button" className="mt-4">
         Click or drag file to retry
       </Button>
+    </div>
+  );
+}
+
+export function ShowUploadedState({ objectUrl }: { objectUrl: string }) {
+  return (
+    <div className="flex items-center justify-center">
+      <Button
+        type="button"
+        className={cn("absolute top-4 right-0")}
+        variant="destructive"
+        size="sm"
+      >
+        <XIcon className="size-4" />
+      </Button>
+      <Image fill className="object-contain p-2" src={objectUrl} alt="image" />
+    </div>
+  );
+}
+
+export function ShowUploadingStatus({
+  file,
+  progress,
+}: {
+  file: File;
+  progress: number;
+}) {
+  return (
+    <div className="flex flex-col justify-center items-center text-center">
+      <p className="">{progress}%</p>
+      <p className="mt-2 text-sm text-foreground font-medium">Uploading...</p>
+      <p className="truncate text-muted-foreground mt-1 max-w-xs">
+        {file.name}
+      </p>
     </div>
   );
 }
