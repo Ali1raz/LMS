@@ -6,8 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { s3 } from "@/lib/s3Client";
 import arcjet, { detectBot, fixedWindow } from "@/lib/arcjet";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
+import { requireAdmin } from "@/app/data/admin/require-admin";
 
 const fileUploadSchema = z.object({
   fileName: z.string().min(1, { message: "File name is required" }),
@@ -32,9 +31,8 @@ const aj = arcjet
   );
 
 export async function POST(request: Request) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await requireAdmin();
+
   try {
     const decision = await aj.protect(request, {
       fingerprint: session?.user.id as string,
