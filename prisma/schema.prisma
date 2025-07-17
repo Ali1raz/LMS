@@ -84,10 +84,10 @@ model Course {
   fileKey          String
   duration         Int
   price            Int
-  level            CourseLevel  @default(BEGINNER)
+  level            CourseLevel  @default(Beginner)
   category         String
   slug             String       @unique
-  status           CourseStatus @default(DRAFT)
+  status           CourseStatus @default(Draft)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -96,13 +96,13 @@ model Course {
 }
 
 enum CourseLevel {
-  BEGINNER
-  INTERMEDIATE
-  ADVANCED
+  Beginner
+  Intermediate
+  Advanced
 }
 
 enum CourseStatus {
-  DRAFT
-  PUBLISHED
-  ARCHIVED
+  Draft
+  Published
+  Archieved
 }

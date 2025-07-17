@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { CloudUpload, ImageIcon, XIcon } from "lucide-react";
+import { CloudUpload, ImageIcon, Loader2, XIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import Image from "next/image";
 
@@ -48,16 +48,30 @@ export function ShowErrorState() {
   );
 }
 
-export function ShowUploadedState({ objectUrl }: { objectUrl: string }) {
+export function ShowUploadedState({
+  objectUrl,
+  isDeleting,
+  handleDelete,
+}: {
+  objectUrl: string;
+  isDeleting: boolean;
+  handleDelete: () => void;
+}) {
   return (
-    <div className="flex items-center justify-center">
+    <div className="relative flex items-center justify-center w-full h-40">
       <Button
+        onClick={handleDelete}
         type="button"
-        className={cn("absolute top-4 right-0")}
+        className={cn("absolute top-2 right-2 z-10")}
         variant="destructive"
         size="sm"
+        disabled={isDeleting}
       >
-        <XIcon className="size-4" />
+        {isDeleting ? (
+          <Loader2 className="size-4 animate-spin" />
+        ) : (
+          <XIcon className="size-4" />
+        )}
       </Button>
       <Image fill className="object-contain p-2" src={objectUrl} alt="image" />
     </div>

@@ -8,6 +8,8 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 [https://www.tigrisdata.com/docs/sdks/s3/aws-js-sdk/](https://www.tigrisdata.com/docs/sdks/s3/aws-js-sdk/)
 
+[T3 try-catch](https://gist.github.com/t3dotgg/a486c4ae66d32bf17c09c73609dacc5b)
+
 ## Getting Started
 
 First, run the development server:

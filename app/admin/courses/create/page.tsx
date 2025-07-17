@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ArrowLeftIcon, Plus, Sparkles } from "lucide-react";
+import { ArrowLeftIcon, Loader2, Plus, Sparkles } from "lucide-react";
 import Link from "next/link";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -41,8 +41,16 @@ import {
 import { SelectTrigger } from "@radix-ui/react-select";
 import { RichTextEditor } from "@/components/rich-text-editor/editor";
 import Uploader from "@/components/file-uploader/uploader";
+import { useTransition } from "react";
+import { tryCatch } from "@/hooks/try-catch";
+import { CreateCourse } from "./action";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
-export default function CreateCourse() {
+export default function CourseCreation() {
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
+
   // 1. Define your form.
   const form = useForm<CourseSchemaType>({
     resolver: zodResolver(CourseSchema),
@@ -51,8 +59,8 @@ export default function CreateCourse() {
       description: "",
       smallDescription: "",
       fileKey: "",
-      duration: 0,
-      price: 0,
+      duration: 1,
+      price: 1,
       level: "Beginner",
       category: "Marketing",
       slug: "",
@@ -62,9 +70,22 @@ export default function CreateCourse() {
 
   // 2. Define a submit handler.
   function onSubmit(values: CourseSchemaType) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+    startTransition(async () => {
+      const { data: result, error } = await tryCatch(CreateCourse(values));
+
+      if (error) {
+        toast.error("Something bad happened");
+        return;
+      }
+
+      if (result.status === "error") {
+        toast.error(result.message);
+      } else if (result.status === "success") {
+        toast.success(result.message);
+        form.reset();
+        router.push("/admin/courses");
+      }
+    });
   }
 
   return (
@@ -101,32 +122,39 @@ export default function CreateCourse() {
                 )}
               />
 
-              <div className="flex items-end">
-                <FormField
-                  control={form.control}
-                  name="slug"
-                  render={({ field }) => (
-                    <FormItem className="w-full">
-                      <FormLabel>slug</FormLabel>
+              <FormField
+                control={form.control}
+                name="slug"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Slug</FormLabel>
+                    <div className="flex gap-2">
                       <FormControl>
-                        <Input placeholder="slug" {...field} />
+                        <Input
+                          placeholder="course-slug"
+                          {...field}
+                          className="flex-1"
+                          readOnly
+                        />
                       </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Button
-                  type="button"
-                  className="w-fit ml-2"
-                  onClick={() => {
-                    const titleValue = form.getValues("title");
-                    const slug = slugify(titleValue);
-                    form.setValue("slug", slug, { shouldValidate: true });
-                  }}
-                >
-                  <Sparkles /> Generate slug
-                </Button>
-              </div>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => {
+                          const titleValue = form.getValues("title");
+                          const slug = slugify(titleValue, { lower: true });
+                          form.setValue("slug", slug, { shouldValidate: true });
+                        }}
+                      >
+                        <Sparkles className="h-4 w-4 mr-2" />
+                        Generate
+                      </Button>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <FormField
                 control={form.control}
                 name="smallDescription"
@@ -166,7 +194,7 @@ export default function CreateCourse() {
                   <FormItem className="w-full">
                     <FormLabel>Thumbnail</FormLabel>
                     <FormControl>
-                      <Uploader />
+                      <Uploader onChange={field.onChange} value={field.value} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -242,6 +270,10 @@ export default function CreateCourse() {
                           type="number"
                           placeholder="Duration (hours)"
                           {...field}
+                          onChange={(e) =>
+                            field.onChange(Number(e.target.value))
+                          }
+                          min={1}
                         />
                       </FormControl>
                       <FormMessage />
@@ -255,7 +287,15 @@ export default function CreateCourse() {
                     <FormItem className="w-full">
                       <FormLabel>Price ($)</FormLabel>
                       <FormControl>
-                        <Input type="number" placeholder="Price" {...field} />
+                        <Input
+                          type="number"
+                          placeholder="Price"
+                          {...field}
+                          min={1}
+                          onChange={(e) =>
+                            field.onChange(Number(e.target.value))
+                          }
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -288,8 +328,16 @@ export default function CreateCourse() {
                 )}
               />
 
-              <Button>
-                Submit Course <Plus />
+              <Button disabled={isPending} type="submit">
+                {isPending ? (
+                  <>
+                    Submitting <Loader2 className="size-4 animate-spin" />
+                  </>
+                ) : (
+                  <>
+                    Submit Course <Plus className="size-4" />
+                  </>
+                )}
               </Button>
             </form>
           </Form>
