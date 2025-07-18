@@ -56,7 +56,7 @@ export default function AdminCourseCard({ data }: iAdminCourseCardProps) {
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <Link href={`/admin/courses/${data.id}}`}>
+              <Link href={`/admin/courses/${data.id}`}>
                 <div className="flex items-center gap-2">
                   <Trash className="size-4 mr-2 text-destructive" />
                   Delete
