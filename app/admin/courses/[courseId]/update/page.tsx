@@ -16,6 +16,7 @@ type Params = Promise<{ courseId: string }>;
 export default async function UpdateCourse({ params }: { params: Params }) {
   const { courseId } = await params;
   const data = await AdminGetCourse(courseId);
+
   return (
     <div>
       <h1 className="text-2xl font-bold mb-4">
@@ -49,7 +50,7 @@ export default async function UpdateCourse({ params }: { params: Params }) {
               <CardDescription>Update course structure.</CardDescription>
             </CardHeader>
             <CardContent>
-              <CourseStructure />
+              <CourseStructure data={data} />
             </CardContent>
           </Card>
         </TabsContent>
