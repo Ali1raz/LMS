@@ -2,6 +2,8 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 [https://ui.shadcn.com/docs/components/form](https://ui.shadcn.com/docs/components/form)
 
+[Next.js middleware](https://www.better-auth.com/docs/integrations/next#middleware)
+
 [https://resend.com/docs/send-with-nextjs](https://resend.com/docs/send-with-nextjs)
 
 [https://tiptap.dev/docs/editor/getting-started/install/nextjs#page-title](https://tiptap.dev/docs/editor/getting-started/install/nextjs#page-title)
